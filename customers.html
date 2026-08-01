@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxury Auto Rental — My Bookings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --asphalt:#0a0a0c; --asphalt-2:#151417; --asphalt-3:#1f1e22;
+    --paper:#f3f0ea; --paper-dim:#c9c5bc;
+    --red:#e6231e; --red-dim:#a3221f;
+    --chrome:#9a9ea5; --amber:#ffb100; --plate-yellow:#f4c723;
+    --green:#2fbf71;
+    --line: rgba(243,240,234,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--asphalt);color:var(--paper);font-family:'Inter',sans-serif;}
+  ::selection{background:var(--red);color:var(--paper);}
+  h1,h2,h3,.display{font-family:'Teko',sans-serif;font-weight:600;line-height:0.95;letter-spacing:0.5px;text-transform:uppercase;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+  header{position:sticky;top:0;left:0;right:0;z-index:100;background:rgba(10,10,12,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:74px;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-mark{width:38px;height:38px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .logo-text{font-family:'Teko',sans-serif;font-size:24px;letter-spacing:1px;line-height:1;}
+  .logo-text span{display:block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--chrome);text-transform:uppercase;margin-top:2px;}
+  nav.links{display:flex;gap:30px;font-size:14px;font-weight:500;}
+  nav.links a{color:var(--paper-dim);transition:color .2s;}
+  nav.links a:hover{color:var(--paper);}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:var(--paper);padding:11px 22px;border-radius:3px;font-size:13px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;border:1px solid var(--red);transition:.2s;cursor:pointer;}
+  .btn:hover{background:transparent;color:var(--red);}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--paper);}
+  .btn-ghost:hover{border-color:var(--paper);}
+  .btn-sm{padding:8px 14px;font-size:11px;}
+  .btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .btn:disabled:hover{background:var(--red);color:var(--paper);}
+
+  .hero{padding:60px 0 40px;border-bottom:1px solid var(--line);background:radial-gradient(ellipse 900px 400px at 85% 0%, rgba(230,35,30,0.14), transparent 60%);}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:14px;}
+  .eyebrow::before{content:"";width:8px;height:8px;background:var(--amber);border-radius:50%;box-shadow:0 0 10px var(--amber);}
+  .hero h1{font-size:clamp(40px,6vw,68px);}
+  .hero p{color:var(--paper-dim);max-width:520px;margin-top:14px;line-height:1.6;font-size:15px;}
+
+  section{padding:60px 0;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:34px;gap:20px;border-bottom:1px solid var(--line);padding-bottom:20px;flex-wrap:wrap;}
+  .section-head .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--red);text-transform:uppercase;margin-bottom:8px;display:block;}
+  .section-head h2{font-size:clamp(30px,4vw,44px);}
+
+  /* Tabs */
+  .fleet-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;}
+  .fleet-tab{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:9px 16px;border:1px solid var(--line);border-radius:30px;color:var(--paper-dim);cursor:pointer;transition:.2s;}
+  .fleet-tab.active,.fleet-tab:hover{border-color:var(--red);color:var(--paper);background:rgba(230,35,30,0.08);}
+
+  .fleet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .car-card{background:var(--asphalt-2);border:1px solid var(--line);border-radius:6px;overflow:hidden;transition:.2s;}
+  .car-card:hover{border-color:var(--red-dim);}
+  .car-stage{height:110px;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(180deg, rgba(230,35,30,0.06), transparent 60%),var(--asphalt-3);border-bottom:1px solid var(--line);}
+  .car-stage svg{width:70%;filter:drop-shadow(0 8px 10px rgba(0,0,0,0.5));}
+  .car-body{padding:16px 18px 20px;}
+  .status-badge{display:inline-flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;padding:4px 9px;border-radius:20px;margin-bottom:8px;}
+  .status-badge.available{background:rgba(47,191,113,0.14);color:var(--green);}
+  .status-badge.booked{background:rgba(230,35,30,0.14);color:var(--red);}
+  .status-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .car-body .cat{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--amber);text-transform:uppercase;}
+  .car-body h3{font-size:24px;margin:4px 0 8px;letter-spacing:0.5px;}
+  .car-specs{display:flex;gap:12px;font-family:'Space Mono',monospace;font-size:10px;color:var(--chrome);flex-wrap:wrap;margin-bottom:14px;}
+  .car-pick{width:100%;font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;padding:9px;border:1px solid var(--line);border-radius:4px;background:transparent;color:var(--paper);cursor:pointer;transition:.2s;}
+  .car-pick:hover{border-color:var(--red);color:var(--red);}
+  .car-pick.selected{background:var(--red);border-color:var(--red);color:var(--paper);}
+
+  .loading,.empty{font-family:'Space Mono',monospace;font-size:12px;color:var(--chrome);padding:30px 0;text-align:center;}
+
+  /* Booking form */
+  .book-panel{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start;}
+  .form-card{background:var(--asphalt-2);border:1px solid var(--line);border-radius:8px;padding:32px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--chrome);margin-bottom:7px;}
+  .field input,.field select,.field textarea{
+    width:100%;background:var(--asphalt-3);border:1px solid var(--line);border-radius:4px;padding:11px 12px;
+    color:var(--paper);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color .2s;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);}
+  .field textarea{resize:vertical;min-height:70px;}
+  .selected-strip{background:var(--asphalt-3);border:1px dashed var(--line);border-radius:4px;padding:12px 14px;margin-bottom:18px;font-family:'Space Mono',monospace;font-size:12px;color:var(--paper-dim);}
+  .selected-strip b{color:var(--amber);}
+  .confirm-box{display:none;text-align:center;padding:20px 0;}
+  .confirm-box.show{display:block;}
+  .confirm-box .check{width:52px;height:52px;border-radius:50%;background:rgba(47,191,113,0.14);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+  .confirm-box h3{font-size:26px;margin-bottom:8px;}
+  .confirm-box p{color:var(--paper-dim);font-size:13.5px;margin-bottom:20px;}
+
+  /* Track panel */
+  .track-card{background:var(--asphalt-2);border:1px solid var(--line);border-radius:8px;padding:32px;}
+  .track-row{display:flex;gap:10px;margin-bottom:22px;}
+  .track-row input{flex:1;}
+  .booking-item{border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+  .booking-item .bi-left h4{font-size:20px;letter-spacing:0.5px;}
+  .booking-item .bi-left p{font-family:'Space Mono',monospace;font-size:11px;color:var(--chrome);margin-top:3px;}
+  .status-pill{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:6px 12px;border-radius:20px;white-space:nowrap;}
+  .status-pill.new{background:rgba(255,177,0,0.14);color:var(--amber);}
+  .status-pill.confirmed{background:rgba(47,191,113,0.14);color:var(--green);}
+  .status-pill.completed{background:rgba(154,158,165,0.14);color:var(--chrome);}
+  .status-pill.cancelled{background:rgba(230,35,30,0.14);color:var(--red);}
+
+  footer{border-top:1px solid var(--line);padding:36px 0;margin-top:20px;}
+  .foot-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+  .copy{font-family:'Space Mono',monospace;font-size:11px;color:var(--chrome);}
+
+  .wa-float{position:fixed;bottom:26px;right:26px;z-index:200;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(0,0,0,0.4);}
+
+  @media (max-width:900px){
+    .fleet-grid{grid-template-columns:repeat(2,1fr);}
+    .book-panel{grid-template-columns:1fr;}
+    nav.links{display:none;}
+  }
+  @media (max-width:600px){
+    .fleet-grid{grid-template-columns:1fr;}
+    .wrap{padding:0 18px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="index.html">
+      <div class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0a0a0c" stroke-width="2"/><circle cx="12" cy="12" r="2.4" fill="#0a0a0c"/><path d="M12 4V9.6M12 14.4V20M4 12H9.6M14.4 12H20" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div class="logo-text">LUXURY AUTO<span>Rental Co. — Delhi NCR</span></div>
+    </a>
+    <nav class="links">
+      <a href="index.html">Home</a>
+      <a href="#browse">Browse Fleet</a>
+      <a href="#book">Book Now</a>
+      <a href="#track">Track Booking</a>
+    </nav>
+    <a class="btn" href="https://wa.me/918500000219" target="_blank" rel="noopener">WhatsApp Us</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Customer Portal</span>
+    <h1>Browse. Book. Drive.</h1>
+    <p>See what's available right now, send us a booking request, and track its status here — no account or app download needed.</p>
+  </div>
+</section>
+
+<!-- BROWSE -->
+<section id="browse">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="tag">Live fleet</span><h2>What's available today</h2></div>
+    </div>
+    <div class="fleet-tabs">
+      <div class="fleet-tab active" data-filter="all">All</div>
+      <div class="fleet-tab" data-filter="sedan">Sedans</div>
+      <div class="fleet-tab" data-filter="suv">SUVs &amp; Off-road</div>
+      <div class="fleet-tab" data-filter="auto">Automatic</div>
+    </div>
+    <div id="fleetGrid" class="fleet-grid"><div class="loading">Loading fleet…</div></div>
+  </div>
+</section>
+
+<!-- BOOK -->
+<section id="book">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="tag">Reserve</span><h2>Send a booking request</h2></div>
+    </div>
+    <div class="book-panel">
+      <div class="form-card">
+        <div class="confirm-box" id="confirmBox">
+          <div class="check"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="#2fbf71" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>Request sent</h3>
+          <p id="confirmText">We've got your booking request — our team will confirm availability shortly.</p>
+          <button class="btn btn-ghost" onclick="resetForm()">Send another request</button>
+        </div>
+
+        <form id="bookingForm">
+          <div class="selected-strip" id="selectedStrip">No car selected yet — pick one from the fleet above, or choose from the dropdown.</div>
+          <div class="field">
+            <label>Car</label>
+            <select id="fCar" required></select>
+          </div>
+          <div class="field"><label>Full name</label><input type="text" id="fName" required placeholder="Your name"></div>
+          <div class="field"><label>Phone / WhatsApp number</label><input type="tel" id="fPhone" required placeholder="10-digit mobile number"></div>
+          <div class="field"><label>Driving licence number</label><input type="text" id="fLicence" required placeholder="As shown on your driving licence"></div>
+          <div class="field"><label>Pickup date</label><input type="date" id="fDate" required></div>
+          <div class="field">
+            <label>Duration</label>
+            <select id="fDuration">
+              <option>1 Day</option><option>Weekend</option><option>Weekly</option><option>Monthly</option>
+            </select>
+          </div>
+          <div class="field"><label>Notes (optional)</label><textarea id="fNotes" placeholder="Pickup location, delivery request, anything else"></textarea></div>
+          <p style="font-family:'Space Mono',monospace;font-size:10.5px;color:var(--chrome);margin:-6px 0 16px;line-height:1.6;">A valid driving licence is required for all self-drive rentals. We'll verify the original at pickup.</p>
+          <button type="submit" class="btn" style="width:100%;justify-content:center;">Send booking request</button>
+        </form>
+      </div>
+
+      <div>
+        <h3 style="font-size:22px;margin-bottom:12px;">How it works</h3>
+        <p style="color:var(--paper-dim);font-size:14px;line-height:1.7;margin-bottom:18px;">
+          Submitting this form sends your request straight to our booking desk. We'll confirm availability, timing and price on call or WhatsApp — nothing is charged until you confirm.
+        </p>
+        <p style="color:var(--paper-dim);font-size:14px;line-height:1.7;">
+          In a hurry? Skip the form and message us directly:
+        </p>
+        <a class="btn btn-ghost" style="margin-top:14px;" href="https://wa.me/918500000219" target="_blank" rel="noopener">Chat on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACK -->
+<section id="track">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="tag">Status</span><h2>Track your booking</h2></div>
+    </div>
+    <div class="track-card">
+      <div class="track-row">
+        <input type="tel" id="trackPhone" placeholder="Enter the phone number you booked with">
+        <button class="btn" onclick="trackBookings()">Search</button>
+      </div>
+      <div id="trackResults"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-row">
+    <div class="copy">© <span id="yr"></span> Luxury Auto Rental — Delhi NCR</div>
+    <a class="btn btn-ghost btn-sm" href="index.html">← Back to main site</a>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/918500000219" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.36a9.86 9.86 0 004.62 1.15h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.79 13.9c-.24.68-1.4 1.32-1.93 1.4-.5.08-1.1.11-1.78-.11-.41-.13-.94-.3-1.62-.6-2.86-1.24-4.72-4.13-4.86-4.32-.14-.19-1.16-1.55-1.16-2.96 0-1.4.73-2.09 1-2.38.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.05.17-.19.72-.84.92-1.13.19-.29.38-.24.65-.14.26.1 1.68.79 1.97.94.29.14.48.21.55.33.07.13.07.72-.17 1.41z"/></svg>
+</a>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+const FLEET_KEY = 'fleet:list_v1';
+const BOOKINGS_KEY = 'bookings:list_v1';
+
+// Works inside Claude.ai (uses window.storage). Falls back to this browser's
+// localStorage when the site is hosted on its own domain, so the site never breaks —
+// see the note in the hosting guide about what this fallback does and doesn't do.
+const hasCloudStorage = typeof window.storage !== 'undefined';
+async function storageGet(key, shared){
+  if(hasCloudStorage) return await window.storage.get(key, shared);
+  const raw = localStorage.getItem(key);
+  if(raw === null) throw new Error('not found');
+  return {key, value: raw, shared};
+}
+async function storageSet(key, value, shared){
+  if(hasCloudStorage) return await window.storage.set(key, value, shared);
+  localStorage.setItem(key, value);
+  return {key, value, shared};
+}
+
+const carIcon = `<svg viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg">
+  <path d="M15 62 C15 45 30 40 45 38 L60 22 C64 17 70 15 78 15 L130 15 C140 15 146 19 150 26 L162 40 C178 42 188 48 188 62 L188 66 C188 70 185 72 181 72 L15 72 C11 72 8 70 8 66 Z" fill="none" stroke="#f3f0ea" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M60 38 L70 22 L128 22 L142 38 Z" fill="none" stroke="#e6231e" stroke-width="2.5" stroke-linejoin="round"/>
+  <line x1="97" y1="22" x2="97" y2="38" stroke="#e6231e" stroke-width="2"/>
+  <circle cx="52" cy="72" r="13" fill="#0a0a0c" stroke="#f3f0ea" stroke-width="3"/><circle cx="52" cy="72" r="4" fill="#f3f0ea"/>
+  <circle cx="150" cy="72" r="13" fill="#0a0a0c" stroke="#f3f0ea" stroke-width="3"/><circle cx="150" cy="72" r="4" fill="#f3f0ea"/>
+</svg>`;
+
+function seedFleet(){
+  return [
+    {id:"c01", name:"Mercedes A-Class", cat:"sedan", label:"Signature Sedan", specs:["5 Seats","Petrol","Automatic"], status:"available"},
+    {id:"c02", name:"Audi A4", cat:"sedan", label:"Executive Sedan", specs:["5 Seats","Petrol","Manual"], status:"available"},
+    {id:"c03", name:"VW Virtus GT", cat:"sedan", label:"1.5 TSI · Modified", specs:["5 Seats","Petrol","Manual"], status:"available"},
+    {id:"c04", name:"VW Polo", cat:"sedan", label:"Hot Hatch", specs:["5 Seats","Petrol","Manual"], status:"available"},
+    {id:"c05", name:"Hyundai i20", cat:"sedan", label:"City Hatch", specs:["5 Seats","Petrol","Manual"], status:"available"},
+    {id:"c06", name:"Maruti Suzuki Fronx", cat:"sedan", label:"Compact SUV Crossover", specs:["5 Seats","Petrol","Automatic"], status:"available"},
+    {id:"c07", name:"Maruti Suzuki Swift", cat:"sedan", label:"Budget Friendly", specs:["5 Seats","Petrol","Manual"], status:"available"},
+    {id:"c08", name:"Toyota Fortuner", cat:"suv", label:"Off-Road SUV", specs:["7 Seats","Diesel","Automatic"], status:"available"},
+    {id:"c09", name:"Land Rover Defender", cat:"suv", label:"Adventure 4x4", specs:["5 Seats","Diesel","Automatic"], status:"available"},
+    {id:"c10", name:"Mercedes G-Class", cat:"suv", label:"Signature SUV", specs:["5 Seats","Petrol","Automatic"], status:"available"},
+    {id:"c11", name:"Mahindra Thar", cat:"suv", label:"Off-Road Icon", specs:["4 Seats","Diesel","Manual"], status:"available"},
+    {id:"c12", name:"Jeep Wrangler Rubicon", cat:"suv", label:"Trail-Rated 4x4", specs:["5 Seats","Petrol","Automatic"], status:"available"},
+    {id:"c13", name:"Mahindra XUV700", cat:"suv", label:"Flagship SUV", specs:["7 Seats","Diesel","Automatic"], status:"available"},
+    {id:"c14", name:"Kia Seltos", cat:"auto", label:"Diesel Queen · Best Mileage", specs:["5 Seats","Diesel","Automatic"], status:"available"},
+    {id:"c15", name:"Mahindra Scorpio Classic", cat:"suv", label:"Leader Edition", specs:["7 Seats","Diesel","Manual"], status:"available"},
+    {id:"c16", name:"Mahindra Scorpio N", cat:"suv", label:"Brand New · Top Model", specs:["7 Seats","Diesel","Automatic"], status:"available"},
+  ];
+}
+
+let fleetCache = [];
+let selectedCarId = null;
+
+async function loadFleet(){
+  try{
+    const res = await storageGet(FLEET_KEY, true);
+    fleetCache = res && res.value ? JSON.parse(res.value) : seedFleet();
+  }catch(e){
+    fleetCache = seedFleet();
+    try{ await storageSet(FLEET_KEY, JSON.stringify(fleetCache), true); }catch(e2){}
+  }
+  renderFleet('all');
+  populateCarSelect();
+}
+
+function renderFleet(filter){
+  const grid = document.getElementById('fleetGrid');
+  const items = fleetCache.filter(c => filter === 'all' || c.cat === filter);
+  if(!items.length){ grid.innerHTML = '<div class="empty">No cars in this category right now.</div>'; return; }
+  grid.innerHTML = items.map(c => `
+    <div class="car-card">
+      <div class="car-stage">${carIcon}</div>
+      <div class="car-body">
+        <span class="status-badge ${c.status==='available'?'available':'booked'}">${c.status==='available'?'Available':'Currently booked'}</span>
+        <div class="cat">${c.label}</div>
+        <h3>${c.name}</h3>
+        <div class="car-specs">${c.specs.map(s=>`<span>${s}</span>`).join('')}</div>
+        <button class="car-pick ${selectedCarId===c.id?'selected':''}" onclick="pickCar('${c.id}')" ${c.status!=='available'?'disabled':''}>
+          ${c.status==='available' ? (selectedCarId===c.id ? 'Selected for booking' : 'Select for booking') : 'Not available'}
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function populateCarSelect(){
+  const sel = document.getElementById('fCar');
+  sel.innerHTML = fleetCache.map(c => `<option value="${c.id}" ${c.status!=='available'?'disabled':''}>${c.name}${c.status!=='available'?' — currently booked':''}</option>`).join('');
+  if(selectedCarId) sel.value = selectedCarId;
+}
+
+function pickCar(id){
+  selectedCarId = id;
+  const car = fleetCache.find(c => c.id === id);
+  document.getElementById('selectedStrip').innerHTML = `Booking for: <b>${car.name}</b> — ${car.label}`;
+  document.getElementById('fCar').value = id;
+  renderFleet(document.querySelector('.fleet-tab.active').dataset.filter);
+  document.getElementById('book').scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('fCar').addEventListener('change', (e) => {
+  selectedCarId = e.target.value;
+  const car = fleetCache.find(c => c.id === selectedCarId);
+  if(car) document.getElementById('selectedStrip').innerHTML = `Booking for: <b>${car.name}</b> — ${car.label}`;
+});
+
+document.querySelectorAll('.fleet-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.fleet-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderFleet(tab.dataset.filter);
+  });
+});
+
+// ---- Booking form ----
+document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending…';
+
+  const car = fleetCache.find(c => c.id === document.getElementById('fCar').value) || {name:'Not specified'};
+  const booking = {
+    id: 'bk_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    carId: car.id || '',
+    carName: car.name,
+    name: document.getElementById('fName').value,
+    phone: document.getElementById('fPhone').value,
+    licence: document.getElementById('fLicence').value,
+    date: document.getElementById('fDate').value,
+    duration: document.getElementById('fDuration').value,
+    notes: document.getElementById('fNotes').value,
+    status: 'new',
+    createdAt: new Date().toISOString()
+  };
+
+  try{
+    let list = [];
+    try{
+      const res = await storageGet(BOOKINGS_KEY, true);
+      list = res && res.value ? JSON.parse(res.value) : [];
+    }catch(e){ list = []; }
+    list.unshift(booking);
+    const saved = await storageSet(BOOKINGS_KEY, JSON.stringify(list), true);
+    if(!saved) throw new Error('Save failed');
+
+    document.getElementById('confirmText').textContent = `We've got your request for the ${car.name} — our team will confirm on ${booking.phone} shortly.`;
+    document.getElementById('confirmBox').classList.add('show');
+    document.getElementById('bookingForm').style.display = 'none';
+  }catch(err){
+    alert("Something went wrong sending your request — please try again, or message us directly on WhatsApp.");
+  }finally{
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send booking request';
+  }
+});
+
+function resetForm(){
+  document.getElementById('bookingForm').reset();
+  document.getElementById('bookingForm').style.display = 'block';
+  document.getElementById('confirmBox').classList.remove('show');
+  selectedCarId = null;
+  document.getElementById('selectedStrip').textContent = 'No car selected yet — pick one from the fleet above, or choose from the dropdown.';
+}
+
+// ---- Track booking ----
+async function trackBookings(){
+  const phone = document.getElementById('trackPhone').value.trim();
+  const results = document.getElementById('trackResults');
+  if(!phone){ results.innerHTML = '<div class="empty">Enter the phone number you used when booking.</div>'; return; }
+  results.innerHTML = '<div class="loading">Searching…</div>';
+  try{
+    const res = await storageGet(BOOKINGS_KEY, true);
+    const list = res && res.value ? JSON.parse(res.value) : [];
+    const matches = list.filter(b => b.phone.replace(/\D/g,'').includes(phone.replace(/\D/g,'')));
+    if(!matches.length){ results.innerHTML = '<div class="empty">No bookings found for that number yet.</div>'; return; }
+    results.innerHTML = matches.map(b => `
+      <div class="booking-item">
+        <div class="bi-left">
+          <h4>${b.carName}</h4>
+          <p>${b.date || 'Flexible date'} · ${b.duration} · Requested ${new Date(b.createdAt).toLocaleDateString()}</p>
+        </div>
+        <span class="status-pill ${b.status}">${b.status}</span>
+      </div>
+    `).join('');
+  }catch(e){
+    results.innerHTML = '<div class="empty">Couldn\'t load bookings right now — please try again.</div>';
+  }
+}
+
+loadFleet();
+</script>
+
+</body>
+</html>

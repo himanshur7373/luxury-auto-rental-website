@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxury Auto Rental — Owner Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --asphalt:#0a0a0c; --asphalt-2:#151417; --asphalt-3:#1f1e22;
+    --paper:#f3f0ea; --paper-dim:#c9c5bc;
+    --red:#e6231e; --red-dim:#a3221f;
+    --chrome:#9a9ea5; --amber:#ffb100;
+    --green:#2fbf71;
+    --line: rgba(243,240,234,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--asphalt);color:var(--paper);font-family:'Inter',sans-serif;}
+  h1,h2,h3{font-family:'Teko',sans-serif;font-weight:600;line-height:0.95;letter-spacing:0.5px;text-transform:uppercase;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 28px;}
+
+  /* Gate */
+  #gate{position:fixed;inset:0;background:var(--asphalt);z-index:500;display:flex;align-items:center;justify-content:center;}
+  .gate-card{background:var(--asphalt-2);border:1px solid var(--line);border-radius:8px;padding:40px;width:340px;text-align:center;}
+  .gate-card .logo-mark{width:44px;height:44px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+  .gate-card h2{font-size:26px;margin-bottom:6px;}
+  .gate-card p{color:var(--paper-dim);font-size:12.5px;margin-bottom:20px;line-height:1.6;}
+  .gate-card input{width:100%;background:var(--asphalt-3);border:1px solid var(--line);border-radius:4px;padding:11px 12px;color:var(--paper);font-family:'Space Mono',monospace;text-align:center;letter-spacing:3px;margin-bottom:14px;outline:none;}
+  .gate-card input:focus{border-color:var(--red);}
+  .gate-err{color:var(--red);font-size:11.5px;font-family:'Space Mono',monospace;margin-top:10px;display:none;}
+  .gate-note{margin-top:18px;font-family:'Space Mono',monospace;font-size:10px;color:var(--chrome);line-height:1.6;border-top:1px solid var(--line);padding-top:14px;}
+
+  header{position:sticky;top:0;z-index:100;background:rgba(10,10,12,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-mark{width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .logo-text{font-family:'Teko',sans-serif;font-size:22px;letter-spacing:1px;line-height:1;}
+  .logo-text span{display:block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--chrome);text-transform:uppercase;margin-top:2px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:var(--paper);padding:10px 18px;border-radius:3px;font-size:12.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;border:1px solid var(--red);transition:.2s;cursor:pointer;}
+  .btn:hover{background:transparent;color:var(--red);}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--paper);}
+  .btn-ghost:hover{border-color:var(--paper);}
+  .btn-sm{padding:7px 12px;font-size:10.5px;}
+  .btn-danger{border-color:var(--red-dim);color:var(--red);}
+  .btn-danger:hover{background:var(--red);color:var(--paper);}
+
+  main{padding:36px 0 80px;}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:44px;}
+  .stat-card{background:var(--asphalt-2);border:1px solid var(--line);border-radius:6px;padding:22px 24px;}
+  .stat-card .num{font-family:'Teko',sans-serif;font-size:44px;color:var(--red);line-height:1;}
+  .stat-card .lbl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--chrome);margin-top:6px;}
+
+  .panel{margin-bottom:56px;}
+  .panel-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px;border-bottom:1px solid var(--line);padding-bottom:16px;flex-wrap:wrap;gap:12px;}
+  .panel-head .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--red);text-transform:uppercase;margin-bottom:6px;display:block;}
+  .panel-head h2{font-size:30px;}
+  .panel-actions{display:flex;gap:10px;}
+
+  /* Bookings table */
+  .table{width:100%;border-collapse:collapse;}
+  .table th{text-align:left;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--chrome);padding:10px 14px;border-bottom:1px solid var(--line);}
+  .table td{padding:14px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:middle;}
+  .table tr:hover td{background:rgba(243,240,234,0.02);}
+  .cust-name{font-weight:600;}
+  .cust-phone{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--chrome);}
+  select.status-select{
+    background:var(--asphalt-3);border:1px solid var(--line);color:var(--paper);border-radius:4px;
+    padding:7px 10px;font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;outline:none;cursor:pointer;
+  }
+  select.status-select.new{border-color:var(--amber);color:var(--amber);}
+  select.status-select.confirmed{border-color:var(--green);color:var(--green);}
+  select.status-select.cancelled{border-color:var(--red);color:var(--red);}
+  .notes-cell{max-width:180px;color:var(--paper-dim);font-size:12.5px;}
+  .empty,.loading{font-family:'Space Mono',monospace;font-size:12px;color:var(--chrome);padding:30px 14px;text-align:center;}
+  .wa-link{color:var(--green);font-size:11px;font-family:'Space Mono',monospace;display:inline-flex;align-items:center;gap:4px;margin-top:3px;}
+
+  /* Fleet management */
+  .fleet-table-wrap{overflow-x:auto;}
+  .fleet-manage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+  .fcard{background:var(--asphalt-2);border:1px solid var(--line);border-radius:6px;padding:18px;}
+  .fcard .frow{display:flex;gap:8px;margin-bottom:8px;}
+  .fcard input,.fcard select{width:100%;background:var(--asphalt-3);border:1px solid var(--line);border-radius:4px;padding:8px 10px;color:var(--paper);font-size:12.5px;outline:none;}
+  .fcard input:focus,.fcard select:focus{border-color:var(--red);}
+  .fcard .frow-btns{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+  .toggle-status{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:6px 10px;border-radius:20px;cursor:pointer;border:1px solid var(--line);}
+  .toggle-status.available{color:var(--green);border-color:var(--green);}
+  .toggle-status.booked{color:var(--red);border-color:var(--red);}
+
+  .add-car-card{background:var(--asphalt-2);border:1px dashed var(--line);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:8px;}
+  .add-car-card h4{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--chrome);margin-bottom:4px;}
+
+  @media (max-width:900px){
+    .stats-row{grid-template-columns:repeat(2,1fr);}
+    .table{display:block;overflow-x:auto;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Access gate (client-side only — see note) -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0a0a0c" stroke-width="2"/><circle cx="12" cy="12" r="2.4" fill="#0a0a0c"/><path d="M12 4V9.6M12 14.4V20M4 12H9.6M14.4 12H20" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
+    <h2>Owner Dashboard</h2>
+    <p>Staff access only. Enter the access code to continue.</p>
+    <input type="password" id="gateCode" placeholder="ACCESS CODE" maxlength="12">
+    <button class="btn" style="width:100%;justify-content:center;" onclick="checkGate()">Enter</button>
+    <div class="gate-err" id="gateErr">Incorrect code — try again.</div>
+    <div class="gate-note">This is a basic front-end lock, not real security — anyone with the code (or your file's source) can get in. Don't use this page for sensitive data without a proper backend + login.</div>
+  </div>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo">
+      <div class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0a0a0c" stroke-width="2"/><circle cx="12" cy="12" r="2.4" fill="#0a0a0c"/><path d="M12 4V9.6M12 14.4V20M4 12H9.6M14.4 12H20" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div class="logo-text">LUXURY AUTO<span>Owner Dashboard</span></div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <a class="btn btn-ghost btn-sm" href="index.html">Public site</a>
+      <a class="btn btn-ghost btn-sm" href="customers.html">Customer portal</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card"><div class="num" id="statFleet">–</div><div class="lbl">Total fleet</div></div>
+      <div class="stat-card"><div class="num" id="statAvailable">–</div><div class="lbl">Available now</div></div>
+      <div class="stat-card"><div class="num" id="statNew">–</div><div class="lbl">New requests</div></div>
+      <div class="stat-card"><div class="num" id="statTotal">–</div><div class="lbl">Total bookings</div></div>
+    </div>
+
+    <!-- BOOKINGS -->
+    <div class="panel">
+      <div class="panel-head">
+        <div><span class="tag">Booking desk</span><h2>Incoming requests</h2></div>
+        <div class="panel-actions">
+          <button class="btn btn-ghost btn-sm" onclick="loadBookings()">Refresh</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="table" id="bookingsTable">
+          <thead><tr><th>Customer</th><th>Licence No.</th><th>Car</th><th>Date / Duration</th><th>Notes</th><th>Requested</th><th>Status</th></tr></thead>
+          <tbody id="bookingsBody"><tr><td colspan="6" class="loading">Loading bookings…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FLEET MANAGEMENT -->
+    <div class="panel">
+      <div class="panel-head">
+        <div><span class="tag">Inventory</span><h2>Manage fleet</h2></div>
+        <div class="panel-actions">
+          <button class="btn btn-ghost btn-sm" onclick="resetFleetToDefault()">Reset to default</button>
+        </div>
+      </div>
+      <div class="fleet-manage-grid" id="fleetManageGrid">
+        <div class="loading">Loading fleet…</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+const FLEET_KEY = 'fleet:list_v1';
+const BOOKINGS_KEY = 'bookings:list_v1';
+const ACCESS_CODE = 'LUXURY2026';
+
+// Works inside Claude.ai (uses window.storage). Falls back to this browser's
+// localStorage when the site is hosted on its own domain — see hosting guide notes.
+const hasCloudStorage = typeof window.storage !== 'undefined';
+async function storageGet(key, shared){
+  if(hasCloudStorage) return await window.storage.get(key, shared);
+  const raw = localStorage.getItem(key);
+  if(raw === null) throw new Error('not found');
+  return {key, value: raw, shared};
+}
+async function storageSet(key, value, shared){
+  if(hasCloudStorage) return await window.storage.set(key, value, shared);
+  localStorage.setItem(key, value);
+  return {key, value, shared};
+}
+
+function checkGate(){
+  const val = document.getElementById('gateCode').value.trim();
+  if(val === ACCESS_CODE){
+    document.getElementById('gate').style.display = 'none';
+    init();
+  }else{
+    document.getElementById('gateErr').style.display = 'block';
+  }
+}
+document.getElementById('gateCode').addEventListener('keydown', e => { if(e.key === 'Enter') checkGate(); });
+
+function seedFleet(){
+  return [
+    {id:"c01", name:"Mercedes A-Class", cat:"sedan", label:"Signature Sedan", specs:["5 Seats","Petrol","Automatic"], status:"available"},
+    {id:"c02", name:"Audi A4", cat:"sedan", label:"Executive Sedan", specs:["5 Seats","Petrol","Manual"], status:"available"},
+    {id:"c03", name:"VW Virtus GT", cat:"sedan", label:"1.5 TSI · Modified", specs:["5 Seats","Petrol","Manual"], status:"available"},
+    {id:"c04", name:"VW Polo", cat:"sedan", label:"Hot Hatch", specs:["5 Seats","Petrol","Manual"], status:"available"},
+    {id:"c05", name:"Hyundai i20", cat:"sedan", label:"City Hatch", specs:["5 Seats","Petrol","Manual"], status:"available"},
+    {id:"c06", name:"Maruti Suzuki Fronx", cat:"sedan", label:"Compact SUV Crossover", specs:["5 Seats","Petrol","Automatic"], status:"available"},
+    {id:"c07", name:"Maruti Suzuki Swift", cat:"sedan", label:"Budget Friendly", specs:["5 Seats","Petrol","Manual"], status:"available"},
+    {id:"c08", name:"Toyota Fortuner", cat:"suv", label:"Off-Road SUV", specs:["7 Seats","Diesel","Automatic"], status:"available"},
+    {id:"c09", name:"Land Rover Defender", cat:"suv", label:"Adventure 4x4", specs:["5 Seats","Diesel","Automatic"], status:"available"},
+    {id:"c10", name:"Mercedes G-Class", cat:"suv", label:"Signature SUV", specs:["5 Seats","Petrol","Automatic"], status:"available"},
+    {id:"c11", name:"Mahindra Thar", cat:"suv", label:"Off-Road Icon", specs:["4 Seats","Diesel","Manual"], status:"available"},
+    {id:"c12", name:"Jeep Wrangler Rubicon", cat:"suv", label:"Trail-Rated 4x4", specs:["5 Seats","Petrol","Automatic"], status:"available"},
+    {id:"c13", name:"Mahindra XUV700", cat:"suv", label:"Flagship SUV", specs:["7 Seats","Diesel","Automatic"], status:"available"},
+    {id:"c14", name:"Kia Seltos", cat:"auto", label:"Diesel Queen · Best Mileage", specs:["5 Seats","Diesel","Automatic"], status:"available"},
+    {id:"c15", name:"Mahindra Scorpio Classic", cat:"suv", label:"Leader Edition", specs:["7 Seats","Diesel","Manual"], status:"available"},
+    {id:"c16", name:"Mahindra Scorpio N", cat:"suv", label:"Brand New · Top Model", specs:["7 Seats","Diesel","Automatic"], status:"available"},
+  ];
+}
+
+let fleetCache = [];
+let bookingsCache = [];
+
+async function init(){
+  await loadFleet();
+  await loadBookings();
+}
+
+// ---------- FLEET ----------
+async function loadFleet(){
+  const grid = document.getElementById('fleetManageGrid');
+  grid.innerHTML = '<div class="loading">Loading fleet…</div>';
+  try{
+    const res = await storageGet(FLEET_KEY, true);
+    fleetCache = res && res.value ? JSON.parse(res.value) : seedFleet();
+    if(!res){ await storageSet(FLEET_KEY, JSON.stringify(fleetCache), true); }
+  }catch(e){
+    fleetCache = seedFleet();
+    try{ await storageSet(FLEET_KEY, JSON.stringify(fleetCache), true); }catch(e2){}
+  }
+  renderFleetManage();
+  renderStats();
+}
+
+async function saveFleet(){
+  try{
+    const saved = await storageSet(FLEET_KEY, JSON.stringify(fleetCache), true);
+    if(!saved) throw new Error('save failed');
+  }catch(e){
+    alert('Could not save fleet changes — please try again.');
+  }
+}
+
+function renderFleetManage(){
+  const grid = document.getElementById('fleetManageGrid');
+  grid.innerHTML = fleetCache.map((c,i) => `
+    <div class="fcard">
+      <div class="frow">
+        <input type="text" value="${c.name}" onchange="updateCar(${i},'name',this.value)" placeholder="Car name">
+      </div>
+      <div class="frow">
+        <select onchange="updateCar(${i},'cat',this.value)">
+          <option value="sedan" ${c.cat==='sedan'?'selected':''}>Sedan</option>
+          <option value="suv" ${c.cat==='suv'?'selected':''}>SUV / Off-road</option>
+          <option value="auto" ${c.cat==='auto'?'selected':''}>Automatic</option>
+        </select>
+      </div>
+      <div class="frow">
+        <input type="text" value="${c.label}" onchange="updateCar(${i},'label',this.value)" placeholder="Tagline / label">
+      </div>
+      <div class="frow">
+        <input type="text" value="${c.specs.join(', ')}" onchange="updateCar(${i},'specs',this.value.split(',').map(s=>s.trim()).filter(Boolean))" placeholder="Seats, Fuel, Transmission">
+      </div>
+      <div class="frow-btns">
+        <span class="toggle-status ${c.status}" onclick="toggleStatus(${i})">${c.status === 'available' ? 'Available' : 'Booked'}</span>
+        <button class="btn btn-danger btn-sm" onclick="deleteCar(${i})">Remove</button>
+      </div>
+    </div>
+  `).join('') + `
+    <div class="add-car-card">
+      <h4>Add a car</h4>
+      <input type="text" id="newCarName" placeholder="Car name (e.g. Hyundai Creta)">
+      <select id="newCarCat">
+        <option value="sedan">Sedan</option>
+        <option value="suv">SUV / Off-road</option>
+        <option value="auto">Automatic</option>
+      </select>
+      <input type="text" id="newCarLabel" placeholder="Tagline / label">
+      <input type="text" id="newCarSpecs" placeholder="Seats, Fuel, Transmission">
+      <button class="btn btn-sm" onclick="addCar()">Add to fleet</button>
+    </div>
+  `;
+}
+
+function updateCar(index, field, value){
+  fleetCache[index][field] = value;
+  saveFleet();
+  renderStats();
+}
+
+function toggleStatus(index){
+  fleetCache[index].status = fleetCache[index].status === 'available' ? 'booked' : 'available';
+  saveFleet();
+  renderFleetManage();
+  renderStats();
+}
+
+function deleteCar(index){
+  if(!confirm(`Remove ${fleetCache[index].name} from the fleet?`)) return;
+  fleetCache.splice(index,1);
+  saveFleet();
+  renderFleetManage();
+  renderStats();
+}
+
+function addCar(){
+  const name = document.getElementById('newCarName').value.trim();
+  if(!name){ alert('Enter a car name first.'); return; }
+  const cat = document.getElementById('newCarCat').value;
+  const label = document.getElementById('newCarLabel').value.trim() || 'New addition';
+  const specsRaw = document.getElementById('newCarSpecs').value.trim();
+  const specs = specsRaw ? specsRaw.split(',').map(s=>s.trim()).filter(Boolean) : ['5 Seats','Petrol','Manual'];
+  fleetCache.push({id: 'c' + Date.now(), name, cat, label, specs, status:'available'});
+  saveFleet();
+  renderFleetManage();
+  renderStats();
+}
+
+async function resetFleetToDefault(){
+  if(!confirm('Reset the entire fleet list back to the default 16 cars? This overwrites current fleet data (including anything customers currently see) for everyone.')) return;
+  fleetCache = seedFleet();
+  await saveFleet();
+  renderFleetManage();
+  renderStats();
+}
+
+// ---------- BOOKINGS ----------
+async function loadBookings(){
+  const body = document.getElementById('bookingsBody');
+  body.innerHTML = '<tr><td colspan="6" class="loading">Loading bookings…</td></tr>';
+  try{
+    const res = await storageGet(BOOKINGS_KEY, true);
+    bookingsCache = res && res.value ? JSON.parse(res.value) : [];
+  }catch(e){
+    bookingsCache = [];
+  }
+  renderBookings();
+  renderStats();
+}
+
+function renderBookings(){
+  const body = document.getElementById('bookingsBody');
+  if(!bookingsCache.length){
+    body.innerHTML = '<tr><td colspan="6" class="empty">No booking requests yet — they\'ll appear here as soon as a customer submits one.</td></tr>';
+    return;
+  }
+  body.innerHTML = bookingsCache.map((b,i) => `
+    <tr>
+      <td>
+        <div class="cust-name">${b.name || '—'}</div>
+        <div class="cust-phone">${b.phone || '—'}</div>
+        ${b.phone ? `<a class="wa-link" href="https://wa.me/91${b.phone.replace(/\D/g,'').slice(-10)}" target="_blank" rel="noopener">↳ WhatsApp</a>` : ''}
+      </td>
+      <td class="mono" style="font-size:12px;">${b.licence || '—'}</td>
+      <td>${b.carName || 'Not specified'}</td>
+      <td class="mono" style="font-size:12px;">${b.date || 'Flexible'}<br>${b.duration || ''}</td>
+      <td class="notes-cell">${b.notes ? b.notes : '—'}</td>
+      <td class="mono" style="font-size:11.5px;color:var(--chrome);">${b.createdAt ? new Date(b.createdAt).toLocaleString() : '—'}</td>
+      <td>
+        <select class="status-select ${b.status}" onchange="updateBookingStatus(${i}, this.value)">
+          <option value="new" ${b.status==='new'?'selected':''}>New</option>
+          <option value="confirmed" ${b.status==='confirmed'?'selected':''}>Confirmed</option>
+          <option value="completed" ${b.status==='completed'?'selected':''}>Completed</option>
+          <option value="cancelled" ${b.status==='cancelled'?'selected':''}>Cancelled</option>
+        </select>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function updateBookingStatus(index, status){
+  bookingsCache[index].status = status;
+  try{
+    const saved = await storageSet(BOOKINGS_KEY, JSON.stringify(bookingsCache), true);
+    if(!saved) throw new Error('save failed');
+  }catch(e){
+    alert('Could not save status change — please try again.');
+  }
+  renderBookings();
+  renderStats();
+}
+
+// ---------- STATS ----------
+function renderStats(){
+  document.getElementById('statFleet').textContent = fleetCache.length;
+  document.getElementById('statAvailable').textContent = fleetCache.filter(c => c.status === 'available').length;
+  document.getElementById('statNew').textContent = bookingsCache.filter(b => b.status === 'new').length;
+  document.getElementById('statTotal').textContent = bookingsCache.length;
+}
+</script>
+
+</body>
+</html>

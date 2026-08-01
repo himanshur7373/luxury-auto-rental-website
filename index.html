@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxury Auto Rental — Self-Drive Cars in Delhi NCR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --asphalt:#0a0a0c;
+    --asphalt-2:#151417;
+    --asphalt-3:#1f1e22;
+    --paper:#f3f0ea;
+    --paper-dim:#c9c5bc;
+    --red:#e6231e;
+    --red-dim:#a3221f;
+    --chrome:#9a9ea5;
+    --amber:#ffb100;
+    --plate-yellow:#f4c723;
+    --line: rgba(243,240,234,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--asphalt);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--red);color:var(--paper);}
+  h1,h2,h3,.display{
+    font-family:'Teko',sans-serif;
+    font-weight:600;
+    line-height:0.95;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+  }
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  img{max-width:100%;display:block;}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(10,10,12,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:74px;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-mark{width:38px;height:38px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .logo-text{font-family:'Teko',sans-serif;font-size:24px;letter-spacing:1px;line-height:1;}
+  .logo-text span{display:block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--chrome);text-transform:uppercase;margin-top:2px;}
+  nav.links{display:flex;gap:34px;font-size:14px;font-weight:500;}
+  nav.links a{color:var(--paper-dim);transition:color .2s;position:relative;}
+  nav.links a:hover{color:var(--paper);}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--red);color:var(--paper);
+    padding:11px 22px;border-radius:3px;
+    font-size:13px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;
+    border:1px solid var(--red);
+    transition:background .2s,color .2s;
+  }
+  .btn:hover{background:transparent;color:var(--red);}
+  .btn-ghost{
+    background:transparent;border:1px solid var(--line);color:var(--paper);
+  }
+  .btn-ghost:hover{border-color:var(--paper);}
+  .mobile-toggle{display:none;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:170px 0 90px;
+    background:
+      radial-gradient(ellipse 900px 500px at 85% 0%, rgba(230,35,30,0.16), transparent 60%),
+      var(--asphalt);
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:140px;
+    background:repeating-linear-gradient(90deg, transparent, transparent 55px, rgba(243,240,234,0.05) 55px, rgba(243,240,234,0.05) 60px);
+    mask-image:linear-gradient(to top, black, transparent);
+  }
+  .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:60px;align-items:end;position:relative;z-index:2;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;
+    color:var(--amber);text-transform:uppercase;margin-bottom:18px;
+  }
+  .eyebrow::before{content:"";width:8px;height:8px;background:var(--amber);border-radius:50%;box-shadow:0 0 10px var(--amber);}
+  .hero h1{font-size:clamp(56px,8vw,108px);}
+  .hero h1 em{font-style:normal;color:var(--red);}
+  .hero p.lead{
+    font-size:18px;color:var(--paper-dim);max-width:480px;margin:22px 0 34px;line-height:1.6;
+  }
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;}
+
+  .spec-strip{
+    display:flex;gap:0;margin-top:56px;border-top:1px solid var(--line);padding-top:22px;
+  }
+  .spec-item{flex:1;padding-right:20px;}
+  .spec-item .num{font-family:'Teko',sans-serif;font-size:40px;color:var(--red);line-height:1;}
+  .spec-item .lbl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--chrome);margin-top:4px;}
+
+  /* ---------- PLATE BOOKING WIDGET (signature element) ---------- */
+  .plate-widget{
+    background:var(--plate-yellow);
+    border-radius:8px;
+    border:5px solid #17181a;
+    padding:22px 22px 26px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6);
+    transform:rotate(-1.2deg);
+    position:relative;
+  }
+  .plate-widget::before{
+    content:"IND";
+    position:absolute;top:-14px;left:24px;
+    background:#1b3a8a;color:#fff;font-family:'Space Mono',monospace;
+    font-size:10px;letter-spacing:2px;padding:4px 8px;border-radius:3px;
+    border:2px solid #17181a;
+  }
+  .plate-header{
+    font-family:'Space Mono',monospace;color:#17181a;font-size:11px;letter-spacing:2px;
+    text-transform:uppercase;font-weight:700;margin-bottom:14px;display:flex;justify-content:space-between;
+  }
+  .plate-code{font-family:'Teko',sans-serif;font-size:30px;color:#17181a;letter-spacing:2px;line-height:1;
+    border-bottom:3px solid #17181a;padding-bottom:14px;margin-bottom:16px;
+  }
+  .plate-code .sep{color:var(--red);padding:0 6px;}
+  .plate-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .plate-field{background:rgba(23,24,26,0.06);border:1.5px solid #17181a;border-radius:4px;padding:8px 10px;}
+  .plate-field label{display:block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#3a3a3a;margin-bottom:3px;}
+  .plate-field select,.plate-field input{
+    width:100%;border:none;background:transparent;font-family:'Space Mono',monospace;
+    font-size:13px;color:#17181a;font-weight:700;outline:none;
+  }
+  .plate-submit{
+    width:100%;background:#17181a;color:var(--plate-yellow);border:none;border-radius:4px;
+    padding:13px;font-family:'Teko',sans-serif;font-size:20px;letter-spacing:2px;text-transform:uppercase;
+    cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .plate-submit:hover{opacity:0.85;}
+  .plate-note{font-family:'Space Mono',monospace;font-size:9px;color:#3a3a3a;text-align:center;margin-top:10px;letter-spacing:0.5px;}
+
+  /* ---------- TICKER ---------- */
+  .ticker-band{
+    background:var(--red);border-bottom:1px solid var(--line);padding:12px 0;overflow:hidden;white-space:nowrap;
+  }
+  .ticker-track{display:inline-flex;animation:scroll 28s linear infinite;}
+  .ticker-track span{
+    font-family:'Teko',sans-serif;font-size:22px;letter-spacing:2px;color:var(--asphalt);padding:0 28px;
+    display:inline-flex;align-items:center;gap:16px;text-transform:uppercase;
+  }
+  .ticker-track span::after{content:"•";color:var(--asphalt);opacity:0.5;margin-left:16px;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ---------- SECTION GENERIC ---------- */
+  section{padding:100px 0;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:50px;gap:30px;border-bottom:1px solid var(--line);padding-bottom:28px;}
+  .section-head .tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--red);text-transform:uppercase;margin-bottom:10px;display:block;}
+  .section-head h2{font-size:clamp(38px,5vw,58px);}
+  .section-head p{color:var(--paper-dim);max-width:340px;font-size:14px;line-height:1.6;}
+
+  /* ---------- FLEET ---------- */
+  .fleet-tabs{display:flex;gap:8px;margin-bottom:36px;flex-wrap:wrap;}
+  .fleet-tab{
+    font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;
+    padding:9px 16px;border:1px solid var(--line);border-radius:30px;color:var(--paper-dim);cursor:pointer;transition:.2s;
+  }
+  .fleet-tab.active,.fleet-tab:hover{border-color:var(--red);color:var(--paper);background:rgba(230,35,30,0.08);}
+  .fleet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .car-card{
+    background:var(--asphalt-2);border:1px solid var(--line);border-radius:6px;overflow:hidden;
+    transition:transform .25s,border-color .25s;
+  }
+  .car-card:hover{transform:translateY(-6px);border-color:var(--red-dim);}
+  .car-stage{
+    height:150px;display:flex;align-items:center;justify-content:center;position:relative;
+    background:
+      linear-gradient(180deg, rgba(230,35,30,0.06), transparent 60%),
+      var(--asphalt-3);
+    border-bottom:1px solid var(--line);
+  }
+  .car-stage::before{
+    content:"";position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--line);
+  }
+  .car-stage::after{
+    content:"";position:absolute;bottom:18px;left:15%;right:15%;height:14px;
+    background:radial-gradient(ellipse, rgba(0,0,0,0.55), transparent 70%);
+  }
+  .car-stage svg{width:76%;position:relative;z-index:2;filter:drop-shadow(0 8px 10px rgba(0,0,0,0.5));}
+  .car-body{padding:18px 20px 22px;}
+  .car-body .cat{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--amber);text-transform:uppercase;}
+  .car-body h3{font-size:26px;margin:4px 0 10px;letter-spacing:0.5px;}
+  .car-specs{display:flex;gap:14px;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--chrome);flex-wrap:wrap;}
+  .car-specs span{display:flex;align-items:center;gap:5px;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+  .step{padding:38px 32px;border-right:1px solid var(--line);position:relative;}
+  .step:last-child{border-right:none;}
+  .step .step-num{font-family:'Teko',sans-serif;font-size:64px;color:var(--red-dim);line-height:1;-webkit-text-stroke:1.5px var(--red);color:transparent;}
+  .step h3{font-size:26px;margin:14px 0 10px;}
+  .step p{color:var(--paper-dim);font-size:14px;line-height:1.6;}
+
+  /* ---------- WHY US ---------- */
+  .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  .why-card{background:var(--asphalt);padding:34px 28px;}
+  .why-card .ic{width:34px;height:34px;margin-bottom:18px;}
+  .why-card h3{font-family:'Inter',sans-serif;font-weight:700;font-size:16px;text-transform:none;letter-spacing:0;margin-bottom:8px;}
+  .why-card p{color:var(--paper-dim);font-size:13.5px;line-height:1.6;}
+
+  /* ---------- OCCASIONS ---------- */
+  .occasion{
+    background:linear-gradient(120deg, rgba(230,35,30,0.10), rgba(230,35,30,0.02));
+    border:1px solid var(--red-dim);border-radius:8px;padding:56px;
+    display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center;
+  }
+  .occasion .tag{color:var(--amber);}
+  .occasion h2{font-size:clamp(34px,4.5vw,52px);margin-bottom:16px;}
+  .occasion p{color:var(--paper-dim);font-size:15px;line-height:1.7;margin-bottom:26px;max-width:460px;}
+  .occ-list{list-style:none;}
+  .occ-list li{
+    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.5px;color:var(--paper);
+    padding:13px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;
+  }
+  .occ-list li span{color:var(--chrome);}
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;}
+  .contact-card{
+    background:var(--asphalt-2);border:1px solid var(--line);border-radius:6px;padding:34px;
+  }
+  .contact-card .lbl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--chrome);text-transform:uppercase;margin-bottom:8px;}
+  .contact-card .val{font-family:'Teko',sans-serif;font-size:32px;margin-bottom:22px;letter-spacing:1px;}
+  .contact-row{display:flex;gap:14px;margin-top:6px;}
+  .loc-list{display:flex;flex-direction:column;gap:0;}
+  .loc-list .row{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .loc-list .row span:first-child{color:var(--paper-dim);}
+  .loc-list .row span:last-child{font-family:'Space Mono',monospace;font-size:13px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--line);padding:44px 0 30px;}
+  .foot-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;}
+  .foot-links{display:flex;gap:24px;font-size:13px;color:var(--paper-dim);}
+  .foot-links a:hover{color:var(--paper);}
+  .copy{font-family:'Space Mono',monospace;font-size:11px;color:var(--chrome);margin-top:26px;text-align:center;}
+
+  /* ---------- WHATSAPP FLOAT ---------- */
+  .wa-float{
+    position:fixed;bottom:26px;right:26px;z-index:200;
+    width:58px;height:58px;border-radius:50%;background:#25D366;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 10px 26px rgba(0,0,0,0.4);
+    transition:transform .2s;
+  }
+  .wa-float:hover{transform:scale(1.08);}
+
+  @media (max-width:900px){
+    nav.links,.mobile-toggle-hide{display:none;}
+    .hero-grid{grid-template-columns:1fr;}
+    .fleet-grid{grid-template-columns:repeat(2,1fr);}
+    .why-grid{grid-template-columns:repeat(2,1fr);}
+    .steps{grid-template-columns:1fr;}
+    .step{border-right:none;border-bottom:1px solid var(--line);}
+    .occasion{grid-template-columns:1fr;padding:34px;}
+    .contact-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:600px){
+    .wrap{padding:0 18px;}
+    .fleet-grid{grid-template-columns:1fr;}
+    .why-grid{grid-template-columns:1fr;}
+    .spec-strip{flex-wrap:wrap;gap:20px;}
+    .spec-item{flex:1 1 40%;}
+    .plate-fields{grid-template-columns:1fr;}
+    section{padding:70px 0;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .ticker-track{animation:none;}
+    *{transition:none !important;}
+  }
+
+  :focus-visible{outline:2px solid var(--amber);outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0a0a0c" stroke-width="2"/><circle cx="12" cy="12" r="2.4" fill="#0a0a0c"/><path d="M12 4V9.6M12 14.4V20M4 12H9.6M14.4 12H20" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="logo-text">LUXURY AUTO<span>Rental Co. — Delhi NCR</span></div>
+    </div>
+    <nav class="links">
+      <a href="#fleet">Fleet</a>
+      <a href="#how">How it works</a>
+      <a href="#occasions">Weddings &amp; Events</a>
+      <a href="#contact">Contact</a>
+      <a href="customers.html">My Bookings</a>
+    </nav>
+    <a class="btn" href="https://wa.me/918500000314?text=Hi%2C%20I%27d%20like%20to%20book%20a%20self-drive%20car" target="_blank" rel="noopener">Book on WhatsApp</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Self-Drive · Delhi NCR</span>
+      <h1>Luxury isn't<br>owned.<br><em>It's rented.</em></h1>
+      <p class="lead">A hand-picked fleet of sedans, SUVs and off-roaders — sanitised, fuelled, and waiting with the keys in your hand, not a chauffeur's.</p>
+      <div class="hero-cta">
+        <a class="btn" href="https://wa.me/918500000314?text=Hi%2C%20I%27d%20like%20to%20book%20a%20self-drive%20car" target="_blank" rel="noopener">Reserve a car</a>
+        <a class="btn btn-ghost" href="#fleet">See the fleet</a>
+      </div>
+
+      <div class="spec-strip">
+        <div class="spec-item"><div class="num">30+</div><div class="lbl">Cars in fleet</div></div>
+        <div class="spec-item"><div class="num">1.5K+</div><div class="lbl">Happy drivers</div></div>
+        <div class="spec-item"><div class="num">NCR</div><div class="lbl">Delhi · Gurugram · Noida</div></div>
+        <div class="spec-item"><div class="num">24/7</div><div class="lbl">Booking support</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="plate-widget">
+        <div class="plate-header"><span>Reserve — Self Drive</span><span>No.001</span></div>
+        <div class="plate-code">HR-26 <span class="sep">/</span> SELF <span class="sep">/</span> DRV</div>
+        <div class="plate-fields">
+          <div class="plate-field">
+            <label>Car type</label>
+            <select id="carType">
+              <option>Sedan</option>
+              <option>SUV / Off-roader</option>
+              <option>Automatic</option>
+              <option>Wedding fleet</option>
+            </select>
+          </div>
+          <div class="plate-field">
+            <label>Pickup date</label>
+            <input type="date" id="pickupDate">
+          </div>
+          <div class="plate-field">
+            <label>Duration</label>
+            <select id="duration">
+              <option>1 Day</option>
+              <option>Weekend</option>
+              <option>Weekly</option>
+              <option>Monthly</option>
+            </select>
+          </div>
+          <div class="plate-field">
+            <label>Your name</label>
+            <input type="text" id="custName" placeholder="Full name">
+          </div>
+        </div>
+        <button class="plate-submit" onclick="sendPlateBooking()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 3H4a1 1 0 00-1 1v16l4-4h13a1 1 0 001-1V4a1 1 0 00-1-1z" stroke="currentColor" stroke-width="2"/></svg>
+          Check availability
+        </button>
+        <div class="plate-note">Sends your request straight to our WhatsApp desk</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-band">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- FLEET -->
+<section id="fleet">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="tag">The garage</span>
+        <h2>Pick your ride</h2>
+      </div>
+      <p>Every car is inspected, sanitised and fuel-topped before it reaches you — logged and signed off before handover.</p>
+    </div>
+
+    <div class="fleet-tabs">
+      <div class="fleet-tab active" data-filter="all">All</div>
+      <div class="fleet-tab" data-filter="sedan">Sedans</div>
+      <div class="fleet-tab" data-filter="suv">SUVs &amp; Off-road</div>
+      <div class="fleet-tab" data-filter="auto">Automatic</div>
+    </div>
+
+    <div class="fleet-grid" id="fleetGrid">
+      <!-- Cards injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="tag">Process</span>
+        <h2>Keys in hand, in three steps</h2>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Choose &amp; reserve</h3>
+        <p>Pick a car from the garage above or message us on WhatsApp with your dates. We hold the car for you.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Verify &amp; pay deposit</h3>
+        <p>Show your driving licence and ID, sign a short agreement, and settle the refundable security deposit.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Pick up &amp; drive</h3>
+        <p>Walk through the car with our team, get the keys, and drive off — no chauffeur, no waiting around.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="tag">Why us</span>
+        <h2>Built for the drive, not just the booking</h2>
+      </div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="#e6231e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3>Sanitised &amp; well-maintained</h3>
+        <p>Every vehicle is cleaned, serviced and checked before your booking — not just wiped down.</p>
+      </div>
+      <div class="why-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="#e6231e" stroke-width="2"/><path d="M7 10h4M7 14h2" stroke="#e6231e" stroke-width="2" stroke-linecap="round"/></svg>
+        <h3>Easy payment options</h3>
+        <p>Pay the way that works for you — online or offline, card, UPI or cash on pickup.</p>
+      </div>
+      <div class="why-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 6.9L21 9.3l-5.5 4.4L17 21l-5-3.8L7 21l1.5-7.3L3 9.3l6.6-.4L12 2z" stroke="#e6231e" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <h3>Wide range, one roof</h3>
+        <p>From hatchbacks for the daily grind to off-roaders for the weekend — sedans, SUVs and automatics, all in one fleet.</p>
+      </div>
+      <div class="why-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0116 0" stroke="#e6231e" stroke-width="2" stroke-linecap="round"/><path d="M4 12v5a2 2 0 002 2h1v-7H4zM20 12v5a2 2 0 01-2 2h-1v-7h3z" stroke="#e6231e" stroke-width="2"/></svg>
+        <h3>24/7 booking support</h3>
+        <p>Message us anytime on WhatsApp — real people reply, not a bot with a script.</p>
+      </div>
+      <div class="why-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M12 3v18" stroke="#e6231e" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#e6231e" stroke-width="2"/></svg>
+        <h3>Doorstep delivery</h3>
+        <p>Need the car at your doorstep, office or the airport across Delhi, Gurugram or Noida? Just ask when you book.</p>
+      </div>
+      <div class="why-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke="#e6231e" stroke-width="2" stroke-linejoin="round"/></svg>
+        <h3>Insurance protected</h3>
+        <p>Every rental is covered, so you drive with one less thing to worry about.</p>
+      </div>
+      <div class="why-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0112 6.5 5.5 5.5 0 0121.5 12c-2.5 4.5-9.5 9-9.5 9z" stroke="#e6231e" stroke-width="2" stroke-linejoin="round"/></svg>
+        <h3>1,500+ happy drivers</h3>
+        <p>A growing community across Delhi, Gurugram and Noida who trust us for road trips, weekends and everyday drives.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OCCASIONS -->
+<section id="occasions">
+  <div class="wrap">
+    <div class="occasion">
+      <div>
+        <span class="tag mono" style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:10px;">Weddings &amp; events</span>
+        <h2>Prefer to be driven?</h2>
+        <p>For weddings, receptions and events, our chauffeur-driven fleet arrives dressed for the occasion — decorated on request, driver included. It's the one booking where we hand over the wheel, not the keys.</p>
+        <a class="btn" href="https://wa.me/918500000219?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20a%20wedding%2Fevent%20car" target="_blank" rel="noopener">Enquire for your date</a>
+      </div>
+      <ul class="occ-list">
+        <li>Bridal car with décor <span>On request</span></li>
+        <li>Chauffeur included <span>Yes</span></li>
+        <li>SUV convoy for events <span>Available</span></li>
+        <li>Booking window <span>Book 2+ weeks ahead</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="tag">Get in touch</span>
+        <h2>Talk to the desk</h2>
+      </div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="lbl">Call or WhatsApp</div>
+        <div class="val">+91 85000 00219</div>
+        <div class="contact-row">
+          <a class="btn" href="https://wa.me/918500000219" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn-ghost" href="tel:+918500000219">Call</a>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="lbl">Call or WhatsApp (alternate line)</div>
+        <div class="val">+91 85000 00314</div>
+        <div class="contact-row">
+          <a class="btn" href="https://wa.me/918500000314" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn-ghost" href="tel:+918500000314">Call</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;" class="loc-list">
+      <div class="row"><span>Location</span><span>Delhi · Gurugram · Noida</span></div>
+      <div class="row"><span>Category</span><span>Self-drive &amp; chauffeur car rental</span></div>
+      <div class="row"><span>Instagram</span><span><a href="https://www.instagram.com/luxury_auto_rental" target="_blank" rel="noopener">@luxury_auto_rental</a></span></div>
+      <div class="row"><span>Hours</span><span>Open daily, 24/7 support</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="logo">
+        <div class="logo-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0a0a0c" stroke-width="2"/><circle cx="12" cy="12" r="2.4" fill="#0a0a0c"/><path d="M12 4V9.6M12 14.4V20M4 12H9.6M14.4 12H20" stroke="#0a0a0c" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="logo-text">LUXURY AUTO<span>Rental Co. — Delhi NCR</span></div>
+      </div>
+      <div class="foot-links">
+        <a href="#fleet">Fleet</a>
+        <a href="#how">How it works</a>
+        <a href="#occasions">Weddings</a>
+        <a href="https://www.instagram.com/luxury_auto_rental" target="_blank" rel="noopener">Instagram</a>
+        <a href="customers.html">My Bookings</a>
+      </div>
+    </div>
+    <div class="copy">© <span id="yr"></span> Luxury Auto Rental — Delhi NCR. Elevate every journey.</div>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/918500000314?text=Hi%2C%20I%27d%20like%20to%20book%20a%20self-drive%20car" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.36a9.86 9.86 0 004.62 1.15h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.79 13.9c-.24.68-1.4 1.32-1.93 1.4-.5.08-1.1.11-1.78-.11-.41-.13-.94-.3-1.62-.6-2.86-1.24-4.72-4.13-4.86-4.32-.14-.19-1.16-1.55-1.16-2.96 0-1.4.73-2.09 1-2.38.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.05.17-.19.72-.84.92-1.13.19-.29.38-.24.65-.14.26.1 1.68.79 1.97.94.29.14.48.21.55.33.07.13.07.72-.17 1.41z"/></svg>
+</a>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // ---- Ticker ----
+  const models = ["Mercedes A-Class","Audi A4","VW Virtus GT","Mahindra Thar","Jeep Wrangler Rubicon","Mahindra XUV700","Hyundai i20","Maruti Fronx","Toyota Fortuner","Land Rover Defender","Mercedes G-Class","Kia Seltos","Scorpio N","Scorpio Classic","Maruti Swift","Luxury Isn't Owned, It's Rented"];
+  const track = document.getElementById('tickerTrack');
+  const loopContent = [...models, ...models].map(m => `<span>${m}</span>`).join('');
+  track.innerHTML = loopContent;
+
+  // ---- Fleet data ----
+  const fleet = [
+    {name:"Mercedes A-Class", cat:"sedan", label:"Signature Sedan", specs:["5 Seats","Petrol","Automatic"]},
+    {name:"Audi A4", cat:"sedan", label:"Executive Sedan", specs:["5 Seats","Petrol","Manual"]},
+    {name:"VW Virtus GT", cat:"sedan", label:"1.5 TSI · Modified", specs:["5 Seats","Petrol","Manual"]},
+    {name:"VW Polo", cat:"sedan", label:"Hot Hatch", specs:["5 Seats","Petrol","Manual"]},
+    {name:"Hyundai i20", cat:"sedan", label:"City Hatch", specs:["5 Seats","Petrol","Manual"]},
+    {name:"Maruti Suzuki Fronx", cat:"sedan", label:"Compact SUV Crossover", specs:["5 Seats","Petrol","Automatic"]},
+    {name:"Maruti Suzuki Swift", cat:"sedan", label:"Budget Friendly", specs:["5 Seats","Petrol","Manual"]},
+    {name:"Toyota Fortuner", cat:"suv", label:"Off-Road SUV", specs:["7 Seats","Diesel","Automatic"]},
+    {name:"Land Rover Defender", cat:"suv", label:"Adventure 4x4", specs:["5 Seats","Diesel","Automatic"]},
+    {name:"Mercedes G-Class", cat:"suv", label:"Signature SUV", specs:["5 Seats","Petrol","Automatic"]},
+    {name:"Mahindra Thar", cat:"suv", label:"Off-Road Icon", specs:["4 Seats","Diesel","Manual"]},
+    {name:"Jeep Wrangler Rubicon", cat:"suv", label:"Trail-Rated 4x4", specs:["5 Seats","Petrol","Automatic"]},
+    {name:"Mahindra XUV700", cat:"suv", label:"Flagship SUV", specs:["7 Seats","Diesel","Automatic"]},
+    {name:"Kia Seltos", cat:"auto", label:"Diesel Queen · Best Mileage", specs:["5 Seats","Diesel","Automatic"]},
+    {name:"Mahindra Scorpio Classic", cat:"suv", label:"Leader Edition", specs:["7 Seats","Diesel","Manual"]},
+    {name:"Mahindra Scorpio N", cat:"suv", label:"Brand New · Top Model", specs:["7 Seats","Diesel","Automatic"]},
+  ];
+
+  const carIcon = `<svg viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15 62 C15 45 30 40 45 38 L60 22 C64 17 70 15 78 15 L130 15 C140 15 146 19 150 26 L162 40 C178 42 188 48 188 62 L188 66 C188 70 185 72 181 72 L15 72 C11 72 8 70 8 66 Z"
+      fill="none" stroke="#f3f0ea" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M60 38 L70 22 L128 22 L142 38 Z" fill="none" stroke="#e6231e" stroke-width="2.5" stroke-linejoin="round"/>
+    <line x1="97" y1="22" x2="97" y2="38" stroke="#e6231e" stroke-width="2"/>
+    <circle cx="52" cy="72" r="13" fill="#0a0a0c" stroke="#f3f0ea" stroke-width="3"/>
+    <circle cx="52" cy="72" r="4" fill="#f3f0ea"/>
+    <circle cx="150" cy="72" r="13" fill="#0a0a0c" stroke="#f3f0ea" stroke-width="3"/>
+    <circle cx="150" cy="72" r="4" fill="#f3f0ea"/>
+    <line x1="15" y1="55" x2="35" y2="55" stroke="#f3f0ea" stroke-width="2" opacity="0.5"/>
+  </svg>`;
+
+  const grid = document.getElementById('fleetGrid');
+  function renderFleet(filter){
+    grid.innerHTML = fleet
+      .filter(c => filter === 'all' || c.cat === filter)
+      .map(c => `
+        <div class="car-card">
+          <div class="car-stage">${carIcon}</div>
+          <div class="car-body">
+            <div class="cat">${c.label}</div>
+            <h3>${c.name}</h3>
+            <div class="car-specs">
+              ${c.specs.map(s => `<span>${s}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+  }
+  renderFleet('all');
+
+  document.querySelectorAll('.fleet-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.fleet-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      renderFleet(tab.dataset.filter);
+    });
+  });
+
+  // ---- Plate booking widget -> WhatsApp ----
+  function sendPlateBooking(){
+    const carType = document.getElementById('carType').value;
+    const date = document.getElementById('pickupDate').value || 'flexible dates';
+    const duration = document.getElementById('duration').value;
+    const name = document.getElementById('custName').value || 'there';
+    const msg = `Hi, I'm ${name}. I'd like to check availability for a ${carType} — pickup on ${date}, for ${duration}.`;
+    window.open(`https://wa.me/918500000314?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+</script>
+
+</body>
+</html>
